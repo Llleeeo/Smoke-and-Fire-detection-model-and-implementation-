@@ -1,0 +1,131 @@
+{
+  "generated_at": "2026-08-11T09:41:28.562610+00:00",
+  "source_dataset": "yolo 5",
+  "split_seed": "uris-yolo5-clean-v1",
+  "strategy": {
+    "split_unit": "connected component of pre-Roboflow source name and perceptual hash distance <= 4",
+    "ratios_by_source": {
+      "train": 0.8,
+      "valid": 0.1,
+      "test": 0.1
+    },
+    "stratification": "set of class IDs present; empty labels form a negative-image stratum",
+    "all_split_policy": "keep one deterministic, best-annotated representative per perceptual component",
+    "exact_duplicate_policy": "remove repeated SHA-256 images; record label conflicts in the removal manifest"
+  },
+  "input": {
+    "split_counts": {
+      "train": {
+        "images": 3871,
+        "labels": 3871,
+        "empty_labels": 330,
+        "annotations": 4384,
+        "class_0": 1558,
+        "class_1": 910,
+        "class_2": 1916
+      },
+      "valid": {
+        "images": 881,
+        "labels": 881,
+        "empty_labels": 91,
+        "annotations": 925,
+        "class_0": 402,
+        "class_1": 214,
+        "class_2": 309
+      },
+      "test": {
+        "images": 316,
+        "labels": 316,
+        "empty_labels": 0,
+        "annotations": 342,
+        "class_0": 78,
+        "class_1": 115,
+        "class_2": 149
+      }
+    },
+    "unique_source_groups": 2049,
+    "label_kinds": {
+      "box": 4513,
+      "polygon": 1138
+    },
+    "perceptual_grouping": {
+      "perceptual_hash_threshold": 4,
+      "perceptual_components": 1887,
+      "source_groups_merged": 162,
+      "union_operations": 162,
+      "largest_component_sources": 12,
+      "component_size_distribution": {
+        "1": 1812,
+        "2": 47,
+        "3": 10,
+        "4": 7,
+        "5": 2,
+        "6": 1,
+        "7": 4,
+        "8": 1,
+        "10": 1,
+        "11": 1,
+        "12": 1
+      }
+    }
+  },
+  "output": {
+    "train": {
+      "images": 1511,
+      "empty_labels": 276,
+      "heic_converted": 23,
+      "annotations": 1383,
+      "class_0": 641,
+      "box": 1257,
+      "polygon": 126,
+      "class_1": 399,
+      "class_2": 343,
+      "sources": 1511
+    },
+    "valid": {
+      "images": 188,
+      "empty_labels": 34,
+      "heic_converted": 1,
+      "annotations": 171,
+      "class_0": 86,
+      "box": 149,
+      "polygon": 22,
+      "class_1": 49,
+      "class_2": 36,
+      "sources": 188
+    },
+    "test": {
+      "images": 188,
+      "empty_labels": 34,
+      "heic_converted": 2,
+      "annotations": 171,
+      "class_0": 82,
+      "box": 154,
+      "polygon": 17,
+      "class_2": 39,
+      "class_1": 50,
+      "sources": 188
+    }
+  },
+  "removed": {
+    "extra_variant_or_near_duplicate_for_valid_component": 136,
+    "extra_variant_or_near_duplicate_for_train_component": 1449,
+    "exact_duplicate_same_label": 1405,
+    "exact_duplicate_label_conflict": 23,
+    "extra_variant_or_near_duplicate_for_test_component": 168
+  },
+  "checks": {
+    "source_overlap": {
+      "train_valid": 0,
+      "train_test": 0,
+      "valid_test": 0
+    },
+    "exact_hash_overlap": {
+      "train_valid": 0,
+      "train_test": 0,
+      "valid_test": 0
+    },
+    "selected_records": 1887,
+    "removed_records": 3181
+  }
+}

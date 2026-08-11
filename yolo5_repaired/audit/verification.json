@@ -1,0 +1,59 @@
+{
+  "splits": {
+    "train": {
+      "images": 1511,
+      "labels": 1511,
+      "empty_labels": 276,
+      "annotations": 1383,
+      "class_2": 343,
+      "box": 1257,
+      "polygon": 126,
+      "class_0": 641,
+      "class_1": 399,
+      "sources": 1511
+    },
+    "valid": {
+      "images": 188,
+      "labels": 188,
+      "empty_labels": 34,
+      "annotations": 171,
+      "class_2": 36,
+      "box": 149,
+      "polygon": 22,
+      "class_0": 86,
+      "class_1": 49,
+      "sources": 188
+    },
+    "test": {
+      "images": 188,
+      "labels": 188,
+      "empty_labels": 34,
+      "annotations": 171,
+      "class_2": 39,
+      "box": 154,
+      "polygon": 17,
+      "class_0": 82,
+      "class_1": 50,
+      "sources": 188
+    }
+  },
+  "overlaps": {
+    "train_valid": {
+      "source_names": 0,
+      "exact_image_hashes": 0,
+      "perceptual_hash_distance_le_4": 0
+    },
+    "train_test": {
+      "source_names": 0,
+      "exact_image_hashes": 0,
+      "perceptual_hash_distance_le_4": 0
+    },
+    "valid_test": {
+      "source_names": 0,
+      "exact_image_hashes": 0,
+      "perceptual_hash_distance_le_4": 0
+    }
+  },
+  "passed": true,
+  "failures": []
+}
