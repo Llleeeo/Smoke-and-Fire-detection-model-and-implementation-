@@ -1,0 +1,465 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "YOLOv5 数据修复报告",
+    "description": "吸烟、火焰与烟雾检测数据的去重、重分组和可复现性修复结果。",
+    "generatedAt": "2026-08-11T09:41:28.562610+00:00",
+    "sources": [
+      {
+        "id": "audit",
+        "label": "Generated YOLOv5 cleaning audit",
+        "path": "summary.json",
+        "query": {
+          "language": "python",
+          "query": "python scripts/verify_dataset.py dataset",
+          "description": "Deterministic dataset inventory, source grouping, exact and perceptual duplicate checks, label validation, and image decode verification.",
+          "filters": [
+            "Classes limited to cigarette, flame, and smoke",
+            "Perceptual duplicate threshold: 64-bit pHash Hamming distance <= 4",
+            "Split ratios: 80% train, 10% validation, 10% test by perceptual component"
+          ],
+          "metric_definitions": [
+            "Source overlap counts shared pre-Roboflow source names across split pairs.",
+            "Perceptual overlap counts image pairs across splits with pHash Hamming distance <= 4.",
+            "Removed records equal original image records minus one selected representative per perceptual component."
+          ]
+        }
+      },
+      {
+        "id": "removed_source",
+        "label": "Reviewed removal-reason rows",
+        "query": {
+          "engine": "DuckDB",
+          "language": "sql",
+          "sql": "SELECT * FROM (VALUES\n  ('Train near-duplicate / extra variant', 1449, 0.455517132977, 'Overweighting one visual source', 'Removed; original export retained'),\n  ('Exact duplicate', 1405, 0.441685004715, 'Overweighting and leakage risk', 'Removed; original export retained'),\n  ('Test near-duplicate / extra variant', 168, 0.052813580635, 'Correlated test evidence', 'Removed; original export retained'),\n  ('Validation near-duplicate / extra variant', 136, 0.042753850990, 'Correlated validation evidence', 'Removed; original export retained'),\n  ('Exact duplicate with label conflict', 23, 0.007230430682, 'Inconsistent supervision', 'Removed; original export retained')\n) AS t(reason, count, share, risk, action)",
+          "description": "Reviewed counts of records excluded by the deterministic cleaning script.",
+          "metric_definitions": [
+            "Count is the number of original image records excluded for each mutually exclusive reason."
+          ]
+        }
+      },
+      {
+        "id": "split_source",
+        "label": "Reviewed split-summary rows",
+        "query": {
+          "engine": "DuckDB",
+          "language": "sql",
+          "sql": "SELECT * FROM (VALUES\n  ('train', 3871, 1511, 1511, 1383, 276, 641, 399, 343),\n  ('valid', 881, 188, 188, 171, 34, 86, 49, 36),\n  ('test', 316, 188, 188, 171, 34, 82, 50, 39)\n) AS t(split, before_images, after_images, after_sources, after_annotations, empty_negative_images, cigarette_annotations, flame_annotations, smoke_annotations)",
+          "description": "Before/after image counts and final annotation counts by split.",
+          "metric_definitions": [
+            "After images count one retained representative per perceptual component."
+          ]
+        }
+      },
+      {
+        "id": "overlap_source",
+        "label": "Reviewed cross-split leakage checks",
+        "query": {
+          "engine": "DuckDB",
+          "language": "sql",
+          "sql": "SELECT * FROM (VALUES\n  ('train / valid', 0, 0, 0),\n  ('train / test', 0, 0, 0),\n  ('valid / test', 0, 0, 0)\n) AS t(split_pair, source_name_overlap, exact_hash_overlap, perceptual_near_duplicate_overlap)",
+          "description": "Cross-split overlap counts from the independent verifier.",
+          "metric_definitions": [
+            "Perceptual overlap uses a 64-bit pHash Hamming-distance threshold of 4."
+          ]
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "removed_reasons_chart",
+        "title": "按原因移除的图片记录",
+        "subtitle": "共移除 3,181 条；原始导出仍完整保留",
+        "showDescription": true,
+        "intent": "comparison",
+        "question": "清洗主要移除了哪些类型的重复或相关记录？",
+        "rationale": "四类移除原因适合用排序水平条形图比较绝对数量。",
+        "type": "horizontalBar",
+        "dataset": "removed_reasons",
+        "sourceId": "removed_source",
+        "encodings": {
+          "x": {
+            "field": "reason",
+            "type": "nominal",
+            "label": "移除原因"
+          },
+          "y": {
+            "field": "count",
+            "type": "quantitative",
+            "aggregate": "none",
+            "label": "图片记录",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "count",
+              "type": "quantitative",
+              "label": "数量",
+              "format": "number"
+            },
+            {
+              "field": "share",
+              "type": "quantitative",
+              "label": "占全部移除记录",
+              "format": "percent"
+            },
+            {
+              "field": "risk",
+              "type": "text",
+              "label": "风险"
+            }
+          ]
+        },
+        "xAxisTitle": "原因",
+        "yAxisTitle": "移除的图片记录数",
+        "valueFormat": "number",
+        "layout": "full",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "settings": {
+          "orientation": "horizontal",
+          "sort": "descending",
+          "showValues": true,
+          "categoryLabelPolicy": "wrap"
+        },
+        "surface": {
+          "surface": "card",
+          "viewMode": "both",
+          "showControls": false
+        },
+        "maxRows": 10
+      }
+    ],
+    "tables": [
+      {
+        "id": "split_table",
+        "title": "清洗前后分组规模",
+        "subtitle": "清洗后按感知相似组计数；训练集、验证集、测试集分别约占 80%/10%/10%",
+        "showDescription": true,
+        "dataset": "split_counts",
+        "defaultSort": {
+          "field": "after_images",
+          "direction": "desc"
+        },
+        "density": "spacious",
+        "sourceId": "split_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "split",
+            "label": "分组",
+            "type": "text"
+          },
+          {
+            "field": "before_images",
+            "label": "清洗前图片",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "after_images",
+            "label": "清洗后图片",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "after_sources",
+            "label": "独立感知组",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "after_annotations",
+            "label": "标注实例",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "empty_negative_images",
+            "label": "负样本",
+            "type": "number",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "overlap_table",
+        "title": "跨分组泄漏检查",
+        "subtitle": "逐对比较 train、valid 与 test；三种重叠口径均应为 0",
+        "showDescription": true,
+        "dataset": "overlap_checks",
+        "defaultSort": {
+          "field": "split_pair",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "sourceId": "overlap_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "split_pair",
+            "label": "分组对",
+            "type": "text"
+          },
+          {
+            "field": "source_name_overlap",
+            "label": "同源文件名重叠",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "exact_hash_overlap",
+            "label": "完全相同图片",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "perceptual_near_duplicate_overlap",
+            "label": "感知近重复",
+            "type": "number",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# YOLOv5 数据修复报告",
+        "layout": "full"
+      },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "sourceId": "audit",
+        "layout": "full",
+        "body": "## Executive Summary\n\n- **数据泄漏已经修复。** 清洗后的 train、valid、test 之间，同源文件名、逐字节重复和感知近重复的交叉数量均为 0。\n- **5,068 张导出图片被归并为 1,887 个独立感知组。** 最终保留 1,511 张训练图、188 张验证图和 188 张测试图；其余 3,181 条重复、增强版本或连拍记录已从清洗副本移除。\n- **数据包现在可直接交给 YOLOv5。** 路径配置已修正，标签与图像一一配对，所有输出图片均可解码，伪装成 JPEG 的 HEIC 文件已转换。\n- **旧模型不能作为清洗后的最终结论。** 原 `best.pt` 和旧 mAP 仅保留作参考；需要重新训练并在新测试集上评估。"
+      },
+      {
+        "id": "removal_finding",
+        "type": "markdown",
+        "sourceId": "audit",
+        "layout": "full",
+        "body": "## 大部分冗余来自重复增强和近似画面\n\n**严格清洗不是简单删除那 114 张跨组完全重复图片。** 它还把相同原图的 Roboflow 增强版本、不同文件名的近重复图片和连续拍摄画面归入同一个感知组。每组只保留标注最完整的一张，避免同一场景反复影响训练或评估。"
+      },
+      {
+        "id": "removed_chart_block",
+        "type": "chart",
+        "chartId": "removed_reasons_chart",
+        "layout": "full"
+      },
+      {
+        "id": "split_finding",
+        "type": "markdown",
+        "sourceId": "audit",
+        "layout": "full",
+        "body": "## 评估集变小，但每张图提供更独立的证据\n\n验证集和测试集各保留 188 个独立感知组。与旧划分相比，数量下降是预期结果：旧导出把增强版本和连拍当作独立样本，而新划分按真实来源计数。数据量看起来更小，但测试分数更接近模型对新场景的泛化表现。"
+      },
+      {
+        "id": "split_table_block",
+        "type": "table",
+        "tableId": "split_table",
+        "layout": "full"
+      },
+      {
+        "id": "verification_finding",
+        "type": "markdown",
+        "sourceId": "audit",
+        "layout": "full",
+        "body": "## 三种泄漏检查全部通过\n\n检查同时覆盖文件名来源、SHA-256 完全重复和 64 位感知哈希近重复。三个分组对在所有口径上都为 0；图像解码、标签字段、类别范围和归一化坐标检查也没有失败项。"
+      },
+      {
+        "id": "overlap_table_block",
+        "type": "table",
+        "tableId": "overlap_table",
+        "layout": "full"
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 下一步：重新训练后再报告指标\n\n1. 按修复包内的 YOLOv5 依赖建立训练环境。\n2. 运行 `train_clean.sh`，可从旧 `best.pt` 继续微调，但训练数据改用新的 `dataset/data.yaml`。\n3. 训练完成后，在新 test 分组上单独运行评估，并以新的 per-class AP、mAP@0.5 和 mAP@0.5:0.95 替换旧指标。\n4. 再用真实部署视频做一次场景外测试，尤其关注烟雾漏检和背景误报。"
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 仍需同伴确认的两点\n\n- 空标签图片是否明确设计为笔、铅笔等香烟相似物负样本？抽样结果支持这一判断，但最好把它写进标注规范。\n- 最终部署场景是固定摄像头、手机照片还是公开视频？这会决定下一轮数据应优先补哪些光照、距离和遮挡条件。"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Caveats and Assumptions\n\n- 感知哈希阈值采用汉明距离不超过 4，重点捕捉高度相似的连拍和重复画面；它不是完整的视频身份识别。\n- 多边形标签保留原样，YOLOv5 检测训练会将其转换为框；换用其他框架时需再次检查兼容性。\n- 报告只说明数据包已经通过质量检查，不代表模型已在清洗数据上重新训练。"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-11T09:41:28.562610+00:00",
+    "status": "ready",
+    "datasets": {
+      "split_counts": [
+        {
+          "split": "train",
+          "before_images": 3871,
+          "after_images": 1511,
+          "after_sources": 1511,
+          "after_annotations": 1383,
+          "empty_negative_images": 276,
+          "cigarette_annotations": 641,
+          "flame_annotations": 399,
+          "smoke_annotations": 343
+        },
+        {
+          "split": "valid",
+          "before_images": 881,
+          "after_images": 188,
+          "after_sources": 188,
+          "after_annotations": 171,
+          "empty_negative_images": 34,
+          "cigarette_annotations": 86,
+          "flame_annotations": 49,
+          "smoke_annotations": 36
+        },
+        {
+          "split": "test",
+          "before_images": 316,
+          "after_images": 188,
+          "after_sources": 188,
+          "after_annotations": 171,
+          "empty_negative_images": 34,
+          "cigarette_annotations": 82,
+          "flame_annotations": 50,
+          "smoke_annotations": 39
+        }
+      ],
+      "removed_reasons": [
+        {
+          "reason": "Train near-duplicate / extra variant",
+          "count": 1449,
+          "share": 0.45551713297705126,
+          "risk": "Overweighting one visual source",
+          "action": "Removed; original export retained"
+        },
+        {
+          "reason": "Exact duplicate",
+          "count": 1405,
+          "share": 0.44168500471549826,
+          "risk": "Overweighting and leakage risk",
+          "action": "Removed; original export retained"
+        },
+        {
+          "reason": "Test near-duplicate / extra variant",
+          "count": 168,
+          "share": 0.05281358063502043,
+          "risk": "Correlated test evidence",
+          "action": "Removed; original export retained"
+        },
+        {
+          "reason": "Validation near-duplicate / extra variant",
+          "count": 136,
+          "share": 0.04275385099025464,
+          "risk": "Correlated validation evidence",
+          "action": "Removed; original export retained"
+        },
+        {
+          "reason": "Exact duplicate with label conflict",
+          "count": 23,
+          "share": 0.007230430682175416,
+          "risk": "Inconsistent supervision",
+          "action": "Removed; original export retained"
+        }
+      ],
+      "overlap_checks": [
+        {
+          "split_pair": "train / valid",
+          "source_name_overlap": 0,
+          "exact_hash_overlap": 0,
+          "perceptual_near_duplicate_overlap": 0
+        },
+        {
+          "split_pair": "train / test",
+          "source_name_overlap": 0,
+          "exact_hash_overlap": 0,
+          "perceptual_near_duplicate_overlap": 0
+        },
+        {
+          "split_pair": "valid / test",
+          "source_name_overlap": 0,
+          "exact_hash_overlap": 0,
+          "perceptual_near_duplicate_overlap": 0
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "audit",
+      "label": "Generated YOLOv5 cleaning audit",
+      "path": "summary.json",
+      "query": {
+        "language": "python",
+        "query": "python scripts/verify_dataset.py dataset",
+        "description": "Deterministic dataset inventory, source grouping, exact and perceptual duplicate checks, label validation, and image decode verification.",
+        "filters": [
+          "Classes limited to cigarette, flame, and smoke",
+          "Perceptual duplicate threshold: 64-bit pHash Hamming distance <= 4",
+          "Split ratios: 80% train, 10% validation, 10% test by perceptual component"
+        ],
+        "metric_definitions": [
+          "Source overlap counts shared pre-Roboflow source names across split pairs.",
+          "Perceptual overlap counts image pairs across splits with pHash Hamming distance <= 4.",
+          "Removed records equal original image records minus one selected representative per perceptual component."
+        ]
+      }
+    },
+    {
+      "id": "removed_source",
+      "label": "Reviewed removal-reason rows",
+      "query": {
+        "engine": "DuckDB",
+        "language": "sql",
+        "sql": "SELECT * FROM (VALUES\n  ('Train near-duplicate / extra variant', 1449, 0.455517132977, 'Overweighting one visual source', 'Removed; original export retained'),\n  ('Exact duplicate', 1405, 0.441685004715, 'Overweighting and leakage risk', 'Removed; original export retained'),\n  ('Test near-duplicate / extra variant', 168, 0.052813580635, 'Correlated test evidence', 'Removed; original export retained'),\n  ('Validation near-duplicate / extra variant', 136, 0.042753850990, 'Correlated validation evidence', 'Removed; original export retained'),\n  ('Exact duplicate with label conflict', 23, 0.007230430682, 'Inconsistent supervision', 'Removed; original export retained')\n) AS t(reason, count, share, risk, action)",
+        "description": "Reviewed counts of records excluded by the deterministic cleaning script.",
+        "metric_definitions": [
+          "Count is the number of original image records excluded for each mutually exclusive reason."
+        ]
+      }
+    },
+    {
+      "id": "split_source",
+      "label": "Reviewed split-summary rows",
+      "query": {
+        "engine": "DuckDB",
+        "language": "sql",
+        "sql": "SELECT * FROM (VALUES\n  ('train', 3871, 1511, 1511, 1383, 276, 641, 399, 343),\n  ('valid', 881, 188, 188, 171, 34, 86, 49, 36),\n  ('test', 316, 188, 188, 171, 34, 82, 50, 39)\n) AS t(split, before_images, after_images, after_sources, after_annotations, empty_negative_images, cigarette_annotations, flame_annotations, smoke_annotations)",
+        "description": "Before/after image counts and final annotation counts by split.",
+        "metric_definitions": [
+          "After images count one retained representative per perceptual component."
+        ]
+      }
+    },
+    {
+      "id": "overlap_source",
+      "label": "Reviewed cross-split leakage checks",
+      "query": {
+        "engine": "DuckDB",
+        "language": "sql",
+        "sql": "SELECT * FROM (VALUES\n  ('train / valid', 0, 0, 0),\n  ('train / test', 0, 0, 0),\n  ('valid / test', 0, 0, 0)\n) AS t(split_pair, source_name_overlap, exact_hash_overlap, perceptual_near_duplicate_overlap)",
+        "description": "Cross-split overlap counts from the independent verifier.",
+        "metric_definitions": [
+          "Perceptual overlap uses a 64-bit pHash Hamming-distance threshold of 4."
+        ]
+      }
+    }
+  ]
+}

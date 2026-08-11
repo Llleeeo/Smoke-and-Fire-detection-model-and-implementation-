@@ -1,0 +1,19 @@
+.DS_Store
+**/.DS_Store
+**/__pycache__/
+*.py[cod]
+
+# Local Python/runtime artifacts
+yolo5_repaired/.venv/
+yolo5_repaired/runs/
+
+# YOLOv5 is downloaded at the pinned commit by setup_environment.sh
+yolo5_repaired/yolov5/
+
+# Generated dataset files stay local; keep only metadata and instructions
+yolo5_repaired/dataset/train/
+yolo5_repaired/dataset/valid/
+yolo5_repaired/dataset/test/
+
+# The repository already contains the teammate's original best.pt at its root
+yolo5_repaired/original_model_reference/weights/
