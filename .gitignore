@@ -8,7 +8,16 @@
 
 # Local Python/runtime artifacts
 training/leakage_safe_yolov5/.venv/
-training/leakage_safe_yolov5/runs/
+# Keep ad-hoc local runs out of Git, but publish the reviewed full experiment.
+training/leakage_safe_yolov5/runs/*
+!training/leakage_safe_yolov5/runs/baseline_clean_test/
+!training/leakage_safe_yolov5/runs/baseline_clean_test/**
+!training/leakage_safe_yolov5/runs/full_clean_45e/
+!training/leakage_safe_yolov5/runs/full_clean_45e/**
+!training/leakage_safe_yolov5/runs/full_clean_test/
+!training/leakage_safe_yolov5/runs/full_clean_test/**
+!training/leakage_safe_yolov5/runs/full_clean_inference/
+!training/leakage_safe_yolov5/runs/full_clean_inference/**
 
 # YOLOv5 is downloaded at the pinned commit by setup_environment.sh
 training/leakage_safe_yolov5/yolov5/

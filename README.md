@@ -6,7 +6,7 @@ YOLOv5 research project for detecting `cigarette`, `flame`, and `smoke`. The rep
 
 | Path | Purpose | Recommended use |
 | --- | --- | --- |
-| [`training/leakage_safe_yolov5/`](training/leakage_safe_yolov5/) | Dataset audit, clean split, setup, training, evaluation, and inference | **Current workflow** |
+| [`training/leakage_safe_yolov5/`](training/leakage_safe_yolov5/) | Dataset audit, clean split, setup, training, evaluation, inference, and published experiment outputs | **Current workflow** |
 | [`models/legacy/`](models/legacy/) | Original teammate checkpoint | Baseline/reference only |
 | [`legacy/`](legacy/) | Original camera, Colab, and copied YOLOv5 training code | Historical reference |
 | [`docs/`](docs/) | Project reports and supporting PDFs | Documentation |
@@ -22,7 +22,19 @@ python scripts/verify_dataset.py dataset
 ./evaluate_clean.sh
 ```
 
-Generated dataset images/labels, downloaded YOLOv5 source, virtual environments, and training runs remain local and are excluded from GitHub.
+Generated dataset images/labels, downloaded YOLOv5 source, virtual environments, and ad-hoc runs remain local. The reviewed 45-epoch experiment, its test results, and its validated weights are published under [`training/leakage_safe_yolov5/runs/`](training/leakage_safe_yolov5/runs/).
+
+## Latest clean-split experiment
+
+The latest model was trained for 45 epochs at 640 px on the leakage-safe split and evaluated once on the independent 188-image test set.
+
+| Model | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
+| --- | ---: | ---: | ---: | ---: |
+| Legacy baseline | 0.461 | 0.105 | 0.084 | 0.033 |
+| **Retrained model** | **0.841** | **0.680** | **0.755** | **0.453** |
+
+- Best checkpoint: [`training/leakage_safe_yolov5/runs/full_clean_45e/weights/best.pt`](training/leakage_safe_yolov5/runs/full_clean_45e/weights/best.pt)
+- Full experiment report: [`training/leakage_safe_yolov5/EXPERIMENT_RESULTS.md`](training/leakage_safe_yolov5/EXPERIMENT_RESULTS.md)
 
 ## Dataset audit status
 
@@ -32,7 +44,7 @@ Generated dataset images/labels, downloaded YOLOv5 source, virtual environments,
 - Perceptual-hash overlap (Hamming distance ≤ 4): 0.
 - Full results: [`training/leakage_safe_yolov5/audit/report.html`](training/leakage_safe_yolov5/audit/report.html).
 
-The checkpoint in `models/legacy/best.pt` was trained on the old split. It can be used as an initialization or baseline, but new metrics should only be reported after retraining and evaluation on the clean split.
+The checkpoint in `models/legacy/best.pt` was trained on the old split and also uses `face-cigarette-smoking` where the clean dataset uses `flame`. It remains useful as initialization or a historical baseline, but the retrained checkpoint above is the current validated model.
 
 ## Security note
 

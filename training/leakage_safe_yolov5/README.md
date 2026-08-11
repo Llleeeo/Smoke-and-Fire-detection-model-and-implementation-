@@ -8,13 +8,16 @@
 - `audit/`：清洗摘要、入选/移除清单、验证输出和数据质量报告。
 - `scripts/`：可重复运行的清洗和验证程序。
 - `original_model_reference/`：同伴提供的旧模型与训练结果；指标来自旧划分，只作参考。
+- `runs/`：已审阅的 45 epoch 完整实验、独立测试结果和最佳模型；临时试跑仍由 Git 忽略。
 - `yolov5/`：与旧权重中记录的 Git 提交一致的 Ultralytics YOLOv5 源码。
 
-GitHub 版本不会提交数据集图片/标签、重复模型权重、虚拟环境和训练输出。运行 `setup_environment.sh` 时会自动下载固定提交 `3fb11111c6a8088fbc91430a1f99d207c16f0620` 的 YOLOv5；本机生成的数据仍保留在当前目录中。
+GitHub 版本不会提交数据集图片/标签、虚拟环境和临时训练输出，但会保留已经完成独立测试的正式实验产物。运行 `setup_environment.sh` 时会自动下载固定提交 `3fb11111c6a8088fbc91430a1f99d207c16f0620` 的 YOLOv5；本机生成的数据仍保留在当前目录中。
 
 ## 重要说明
 
 旧的 `best.pt` 可以继续用于试跑推理，但不能代表清洗后数据上的最终模型。要得到可信指标，必须使用 `dataset/data.yaml` 重新训练，并在新的 `test` 分组上评估。
+
+最新完整实验已经完成：独立测试集上的 Precision 为 **0.841**、Recall 为 **0.680**、mAP@0.5 为 **0.755**、mAP@0.5:0.95 为 **0.453**。完整配置、分类指标、资源占用和产物索引见 [`EXPERIMENT_RESULTS.md`](EXPERIMENT_RESULTS.md)。
 
 ## 验证
 
@@ -49,6 +52,12 @@ source .venv/bin/activate
 
 ```bash
 WEIGHTS=/path/to/new/best.pt ./infer_clean.sh /path/to/image-or-video
+```
+
+仓库内已验证权重可直接使用：
+
+```bash
+WEIGHTS="$PWD/runs/full_clean_45e/weights/best.pt" ./infer_clean.sh /path/to/image-or-video
 ```
 
 ## 独立测试
