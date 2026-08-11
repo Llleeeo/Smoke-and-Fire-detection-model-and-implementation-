@@ -2,18 +2,21 @@
 **/.DS_Store
 **/__pycache__/
 *.py[cod]
+.env
+.env.*
+!.env.example
 
 # Local Python/runtime artifacts
-yolo5_repaired/.venv/
-yolo5_repaired/runs/
+training/leakage_safe_yolov5/.venv/
+training/leakage_safe_yolov5/runs/
 
 # YOLOv5 is downloaded at the pinned commit by setup_environment.sh
-yolo5_repaired/yolov5/
+training/leakage_safe_yolov5/yolov5/
 
 # Generated dataset files stay local; keep only metadata and instructions
-yolo5_repaired/dataset/train/
-yolo5_repaired/dataset/valid/
-yolo5_repaired/dataset/test/
+training/leakage_safe_yolov5/dataset/train/
+training/leakage_safe_yolov5/dataset/valid/
+training/leakage_safe_yolov5/dataset/test/
 
-# The repository already contains the teammate's original best.pt at its root
-yolo5_repaired/original_model_reference/weights/
+# The same legacy checkpoint already exists under models/legacy/
+training/leakage_safe_yolov5/original_model_reference/weights/

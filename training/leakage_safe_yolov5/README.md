@@ -1,4 +1,4 @@
-# YOLOv5 数据修复包
+# YOLOv5 数据清洗与重训练流程
 
 这个目录用于修复原始导出中的数据泄漏、重复图片、错误数据路径和伪装成 JPEG 的 HEIC 文件。原始目录不会被修改。
 
@@ -10,7 +10,7 @@
 - `original_model_reference/`：同伴提供的旧模型与训练结果；指标来自旧划分，只作参考。
 - `yolov5/`：与旧权重中记录的 Git 提交一致的 Ultralytics YOLOv5 源码。
 
-GitHub 版本不会提交数据集图片/标签、重复模型权重、虚拟环境和训练输出。运行 `setup_environment.sh` 时会自动下载固定提交 `3fb11111c6a8088fbc91430a1f99d207c16f0620` 的 YOLOv5；本机生成的数据仍保留在原目录中。
+GitHub 版本不会提交数据集图片/标签、重复模型权重、虚拟环境和训练输出。运行 `setup_environment.sh` 时会自动下载固定提交 `3fb11111c6a8088fbc91430a1f99d207c16f0620` 的 YOLOv5；本机生成的数据仍保留在当前目录中。
 
 ## 重要说明
 
@@ -37,7 +37,7 @@ source .venv/bin/activate
 ./train_clean.sh
 ```
 
-仓库根目录存在旧的 `best.pt` 时，默认从它继续微调；否则从 `yolov5s.pt` 开始。也可以设置 `INITIAL_WEIGHTS=/path/to/weights.pt`。可在命令末尾添加 YOLOv5 参数，例如 `--device 0 --batch 32`。
+`models/legacy/best.pt` 存在时，默认从它继续微调；否则从 `yolov5s.pt` 开始。也可以设置 `INITIAL_WEIGHTS=/path/to/weights.pt`。可在命令末尾添加 YOLOv5 参数，例如 `--device 0 --batch 32`。
 
 ## 推理
 

@@ -1,7 +1,39 @@
-Cigarette smoking is a significant public-health issue, which has numerous negative impacts on health consequences such as cancer and heart disease. In addition, the fire risk is associated with smoking: discarded cigarette butts and smoldering ashes are a common ignition for residential fire. Therefore, our project aimed to develop a cigarette smoking detection model using YOLOv5 architecture. In this report, we will analyze our project process and results and provide improvement of the model. This repository contains the code for tracking and detecting fires and smokes in real-time video using YOLOv5. The project uses a pre-trained YOLOv5 model to identify the presence of fire and smoke in a given video frame and track it through subsequent frames.
+# Smoke and Fire Detection with YOLOv5
 
-My implementation is only for reference, you could use your own image dataset as well as creating datasets on roboflow. 
+YOLOv5 research project for detecting `cigarette`, `flame`, and `smoke`. The repository keeps the original prototype for reference and provides a separate, leakage-safe workflow for trustworthy retraining and evaluation.
 
-## Leakage-safe retraining workflow
+## Repository structure
 
-The [`yolo5_repaired`](yolo5_repaired/) package adds a reproducible dataset audit and rebuild workflow, pinned YOLOv5 setup, clean training/evaluation scripts, and an HTML quality report. Generated dataset files and training runs stay local so the repository remains lightweight.
+| Path | Purpose | Recommended use |
+| --- | --- | --- |
+| [`training/leakage_safe_yolov5/`](training/leakage_safe_yolov5/) | Dataset audit, clean split, setup, training, evaluation, and inference | **Current workflow** |
+| [`models/legacy/`](models/legacy/) | Original teammate checkpoint | Baseline/reference only |
+| [`legacy/`](legacy/) | Original camera, Colab, and copied YOLOv5 training code | Historical reference |
+| [`docs/`](docs/) | Project reports and supporting PDFs | Documentation |
+
+## Recommended workflow
+
+```bash
+cd training/leakage_safe_yolov5
+./setup_environment.sh
+source .venv/bin/activate
+python scripts/verify_dataset.py dataset
+./train_clean.sh
+./evaluate_clean.sh
+```
+
+Generated dataset images/labels, downloaded YOLOv5 source, virtual environments, and training runs remain local and are excluded from GitHub.
+
+## Dataset audit status
+
+- Clean split: 1,511 train / 188 validation / 188 test images.
+- Source-name overlap across splits: 0.
+- Exact SHA-256 overlap across splits: 0.
+- Perceptual-hash overlap (Hamming distance ≤ 4): 0.
+- Full results: [`training/leakage_safe_yolov5/audit/report.html`](training/leakage_safe_yolov5/audit/report.html).
+
+The checkpoint in `models/legacy/best.pt` was trained on the old split. It can be used as an initialization or baseline, but new metrics should only be reported after retraining and evaluation on the clean split.
+
+## Security note
+
+Credentials must be supplied through environment variables and must never be committed. The legacy Roboflow helper expects `ROBOFLOW_API_KEY`.

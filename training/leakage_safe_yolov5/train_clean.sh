@@ -3,7 +3,7 @@ set -euo pipefail
 
 package_dir="$(cd "$(dirname "$0")" && pwd)"
 python_bin="${PYTHON_BIN:-python3}"
-default_weights="$package_dir/../best.pt"
+default_weights="$package_dir/../../models/legacy/best.pt"
 
 if [[ -f "$default_weights" ]]; then
   weights="${INITIAL_WEIGHTS:-$default_weights}"

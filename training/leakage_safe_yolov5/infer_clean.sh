@@ -3,7 +3,7 @@ set -euo pipefail
 
 package_dir="$(cd "$(dirname "$0")" && pwd)"
 python_bin="${PYTHON_BIN:-python3}"
-weights="${WEIGHTS:-$package_dir/../best.pt}"
+weights="${WEIGHTS:-$package_dir/../../models/legacy/best.pt}"
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 IMAGE_OR_VIDEO [extra detect.py arguments]" >&2
