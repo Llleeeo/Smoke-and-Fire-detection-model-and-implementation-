@@ -34,15 +34,23 @@ def source_key(path: Path) -> str:
     return path.stem.split(".rf.", 1)[0]
 
 
+def hamming_distance(left: int, right: int) -> int:
+    """Return bit distance without requiring Python 3.10's int.bit_count()."""
+    return bin(left ^ right).count("1")
+
+
 def perceptual_hash(path: Path) -> int:
     with Image.open(path) as opened:
         pixels = np.asarray(
             ImageOps.exif_transpose(opened)
             .convert("L")
             .resize((PHASH_SIZE, PHASH_SIZE), Image.Resampling.LANCZOS),
-            dtype=float,
+            dtype=np.float64,
         )
-    low_frequency = (_DCT @ pixels @ _DCT.T)[:8, :8]
+    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
+        low_frequency = (_DCT @ pixels @ _DCT.T)[:8, :8]
+    if not np.isfinite(low_frequency).all():
+        raise ValueError(f"non-finite perceptual hash coefficients for {path}")
     median = np.median(low_frequency.flat[1:])
     value = 0
     for bit in (low_frequency > median).flat:
@@ -105,7 +113,7 @@ def verify(root: Path) -> dict[str, object]:
             "source_names": len(sources[left] & sources[right]),
             "exact_image_hashes": len(hashes[left] & hashes[right]),
             "perceptual_hash_distance_le_4": sum(
-                (left_hash ^ right_hash).bit_count() <= 4
+                hamming_distance(left_hash, right_hash) <= 4
                 for _, left_hash in perceptual_hashes[left]
                 for _, right_hash in perceptual_hashes[right]
             ),

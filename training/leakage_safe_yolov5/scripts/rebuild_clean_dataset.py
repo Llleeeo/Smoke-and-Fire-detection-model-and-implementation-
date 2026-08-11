@@ -63,6 +63,11 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def hamming_distance(left: int, right: int) -> int:
+    """Return bit distance without requiring Python 3.10's int.bit_count()."""
+    return bin(left ^ right).count("1")
+
+
 def is_heif_disguised_as_jpeg(path: Path) -> bool:
     with path.open("rb") as handle:
         header = handle.read(16)
@@ -92,12 +97,15 @@ def perceptual_hash(path: Path, is_heif: bool) -> int:
                 ImageOps.exif_transpose(opened)
                 .convert("L")
                 .resize((PHASH_SIZE, PHASH_SIZE), Image.Resampling.LANCZOS),
-                dtype=float,
+                dtype=np.float64,
             )
     finally:
         if temporary_path:
             Path(temporary_path).unlink(missing_ok=True)
-    low_frequency = (_DCT_MATRIX @ pixels @ _DCT_MATRIX.T)[:8, :8]
+    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
+        low_frequency = (_DCT_MATRIX @ pixels @ _DCT_MATRIX.T)[:8, :8]
+    if not np.isfinite(low_frequency).all():
+        raise ValueError(f"non-finite perceptual hash coefficients for {path}")
     median = np.median(low_frequency.flat[1:])
     value = 0
     for bit in (low_frequency > median).flat:
@@ -236,7 +244,7 @@ def merge_near_duplicate_sources(
             union_count += int(union(ordered_sources[0], other))
     for index, left_hash in enumerate(unique_hashes):
         for right_hash in unique_hashes[index + 1 :]:
-            if (left_hash ^ right_hash).bit_count() <= threshold:
+            if hamming_distance(left_hash, right_hash) <= threshold:
                 for left_source in sources_by_hash[left_hash]:
                     for right_source in sources_by_hash[right_hash]:
                         union_count += int(union(left_source, right_source))
