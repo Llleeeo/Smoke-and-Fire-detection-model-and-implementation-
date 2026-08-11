@@ -13,6 +13,8 @@
 
 GitHub 版本不会提交数据集图片/标签、虚拟环境和临时训练输出，但会保留已经完成独立测试的正式实验产物。运行 `setup_environment.sh` 时会自动下载固定提交 `3fb11111c6a8088fbc91430a1f99d207c16f0620` 的 YOLOv5；本机生成的数据仍保留在当前目录中。
 
+在工作站清理后，原始 `yolo 5` 数据、同伴提供的完整 `finetune_D3_stageD92iteration` 文件夹，以及这里生成的 1,887 对清洗数据，均可从私人仓库 `Llleeeo/Smoke-and-Fire-detection-data-private` 恢复。该仓库的 `RESTORE.md` 记录了目标路径，SHA-256 清单用于确认恢复内容与实验时完全一致。
+
 ## 重要说明
 
 旧的 `best.pt` 可以继续用于试跑推理，但不能代表清洗后数据上的最终模型。要得到可信指标，必须使用 `dataset/data.yaml` 重新训练，并在新的 `test` 分组上评估。

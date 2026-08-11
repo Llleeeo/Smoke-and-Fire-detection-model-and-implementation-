@@ -7,9 +7,10 @@ YOLOv5 research project for detecting `cigarette`, `flame`, and `smoke`. The rep
 | Path | Purpose | Recommended use |
 | --- | --- | --- |
 | [`training/leakage_safe_yolov5/`](training/leakage_safe_yolov5/) | Dataset audit, clean split, setup, training, evaluation, inference, and published experiment outputs | **Current workflow** |
-| [`models/legacy/`](models/legacy/) | Original teammate checkpoint | Baseline/reference only |
+| [`models/legacy/`](models/legacy/) | Historical checkpoint used as the published experiment baseline and initialisation | Baseline/reference only |
 | [`legacy/`](legacy/) | Original camera, Colab, and copied YOLOv5 training code | Historical reference |
 | [`docs/`](docs/) | Project reports and supporting PDFs | Documentation |
+| [`docs/generated-output/`](docs/generated-output/) | Final ePoster, earlier poster exports, PDFs, and rendered previews | Submission/archive |
 
 ## Recommended workflow
 
@@ -23,6 +24,8 @@ python scripts/verify_dataset.py dataset
 ```
 
 Generated dataset images/labels, downloaded YOLOv5 source, virtual environments, and ad-hoc runs remain local. The reviewed 45-epoch experiment, its test results, and its validated weights are published under [`training/leakage_safe_yolov5/runs/`](training/leakage_safe_yolov5/runs/).
+
+The exact raw teammate handoff and the generated leakage-safe dataset are backed up separately in the private repository `Llleeeo/Smoke-and-Fire-detection-data-private`. That repository contains restore instructions and SHA-256 manifests. Access requires permission from the owner; no credentials are stored in either repository.
 
 ## Latest clean-split experiment
 
@@ -44,7 +47,7 @@ The latest model was trained for 45 epochs at 640 px on the leakage-safe split a
 - Perceptual-hash overlap (Hamming distance ≤ 4): 0.
 - Full results: [`training/leakage_safe_yolov5/audit/report.html`](training/leakage_safe_yolov5/audit/report.html).
 
-The checkpoint in `models/legacy/best.pt` was trained on the old split and also uses `face-cigarette-smoking` where the clean dataset uses `flame`. It remains useful as initialization or a historical baseline, but the retrained checkpoint above is the current validated model.
+The checkpoint in `models/legacy/best.pt` was trained on the old split and also uses `face-cigarette-smoking` where the clean dataset uses `flame`. It is the checkpoint actually used to initialise and benchmark the published 45-epoch run. The later teammate handoff folder `finetune_D3_stageD92iteration` contains a different historical checkpoint and is preserved verbatim in the private data repository. Neither legacy checkpoint supersedes the validated retrained model above.
 
 ## Security note
 
