@@ -3,7 +3,7 @@ set -euo pipefail
 
 package_dir="$(cd "$(dirname "$0")" && pwd)"
 python_bin="${PYTHON_BIN:-python3}"
-weights="${WEIGHTS:-$package_dir/../best.pt}"
+weights="${WEIGHTS:-$package_dir/../../models/legacy/best.pt}"
 
 "$python_bin" "$package_dir/yolov5/val.py" \
   --weights "$weights" \

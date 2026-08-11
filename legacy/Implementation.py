@@ -6,8 +6,10 @@ import pathlib
 
 # 关键路径修正 --------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-YOLOV5_PATH = os.path.join(BASE_DIR, 'yolov5')
-sys.path.insert(0, YOLOV5_PATH)  # 必须放在其他导入之前
+REPO_ROOT = os.path.dirname(BASE_DIR)
+YOLOV5_PARENT = os.path.join(REPO_ROOT, 'training', 'leakage_safe_yolov5')
+WEIGHTS_PATH = os.path.join(REPO_ROOT, 'models', 'legacy', 'best.pt')
+sys.path.insert(0, YOLOV5_PARENT)  # 必须放在其他导入之前
 
 # 临时重定向 PosixPath 到 WindowsPath
 temp = pathlib.PosixPath
@@ -20,7 +22,7 @@ from yolov5.utils.plots import Annotator, colors
 
 def main():
     # 加载模型
-    model = attempt_load(os.path.join(BASE_DIR, 'best.pt'), device='cpu')
+    model = attempt_load(WEIGHTS_PATH, device='cpu')
     model.eval()
 
     # 初始化摄像头
