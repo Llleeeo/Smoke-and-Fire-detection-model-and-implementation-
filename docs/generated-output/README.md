@@ -1,13 +1,13 @@
 # Generated project outputs
 
-This directory archives the project deliverables that were generated locally before the workstation cleanup.
+This directory contains the current project deliverables retained after local cleanup.
 
 ## Current URIS ePoster
 
-- `eposter/P0053535_YUAN_Haoming_URIS_Showcase_2026_Dense.pptx`: editable, official-template PowerPoint.
+- `eposter/P0053535_YUAN_Haoming_URIS_Showcase_2026.pptx`: editable, official-template PowerPoint.
 - `eposter/P0053535_YUAN_Haoming.jpg`: 1080 x 1920 submission-ready JPEG.
 
-The remaining files preserve earlier poster drafts, rendered previews, inspection snapshots, and the earlier PDF export. The dense PowerPoint and matching JPEG are the current versions.
+The supervisor affiliation follows the CURI instruction received on 13 August 2026: `Department: PM` (Department of Physics and Materials). Superseded poster drafts, renders, inspection snapshots, and temporary build files have been removed; earlier tracked versions remain recoverable from Git history.
 
 ## Data dependency
 
