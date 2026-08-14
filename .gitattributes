@@ -1,0 +1,8 @@
+# Reproducibility manifests must remain byte-identical across Windows and Unix.
+training/leakage_safe_yolov5/audit/*.csv text eol=lf
+training/leakage_safe_yolov5/experiments/factorial/manifests/*.csv text eol=lf
+
+# Scripts use the line endings expected by their native interpreters.
+*.py text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=crlf

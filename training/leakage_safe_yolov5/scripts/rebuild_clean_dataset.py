@@ -3,10 +3,12 @@
 
 The split unit is the pre-Roboflow source name (the part before ``.rf.``).
 Sources are stratified by their set of class labels and assigned 80/10/10 to
-train/valid/test. Training keeps distinct offline augmentations; validation
-and test keep one deterministic representative per source. Exact image
-duplicates are removed. HEIC files carrying a .jpg/.JPG suffix are converted
-to real JPEG files with macOS ``sips``.
+train/valid/test. By default every split keeps one deterministic representative
+per perceptual component. The ``all`` training policy retains distinct offline
+or near-duplicate variants inside training groups for a controlled ablation;
+validation and test always keep one representative. Exact image duplicates are
+removed. HEIC files carrying a .jpg/.JPG suffix are converted to real JPEG
+files with macOS ``sips``.
 """
 
 from __future__ import annotations
@@ -298,7 +300,9 @@ def assign_sources(records_by_source: dict[str, list[Record]], seed: str) -> dic
     return assignment
 
 
-def choose_records(records: list[Record], target_split: str) -> tuple[list[Record], list[tuple[Record, str]]]:
+def choose_records(
+    records: list[Record], target_split: str, train_policy: str
+) -> tuple[list[Record], list[tuple[Record, str]]]:
     preferred_order = {
         "train": ["train", "valid", "test"],
         "valid": ["valid", "test", "train"],
@@ -312,9 +316,30 @@ def choose_records(records: list[Record], target_split: str) -> tuple[list[Recor
             item.image.name,
         ),
     )
-    selected = ordered[:1]
     hashes = Counter(record.image_sha256 for record in records)
-    removed = []
+    selected: list[Record] = []
+    removed: list[tuple[Record, str]] = []
+    if target_split == "train" and train_policy == "all":
+        selected_hashes: set[str] = set()
+        for record in ordered:
+            if record.image_sha256 not in selected_hashes:
+                selected.append(record)
+                selected_hashes.add(record.image_sha256)
+                continue
+            same_hash_labels = {
+                candidate.label_text
+                for candidate in records
+                if candidate.image_sha256 == record.image_sha256
+            }
+            reason = (
+                "exact_duplicate_label_conflict"
+                if len(same_hash_labels) > 1
+                else "exact_duplicate_same_label"
+            )
+            removed.append((record, reason))
+        return selected, removed
+
+    selected = ordered[:1]
     for record in ordered[1:]:
         if hashes[record.image_sha256] > 1:
             same_hash_labels = {candidate.label_text for candidate in records if candidate.image_sha256 == record.image_sha256}
@@ -357,7 +382,13 @@ def materialize_image(record: Record, destination: Path) -> str:
     return "copied"
 
 
-def build(source_root: Path, output_root: Path, seed: str) -> dict[str, object]:
+def build(
+    source_root: Path,
+    output_root: Path,
+    seed: str,
+    train_policy: str = "one",
+    keep_train_negatives: bool = True,
+) -> dict[str, object]:
     if (output_root / "dataset").exists() or (output_root / "audit").exists():
         raise FileExistsError(f"Output already contains dataset/audit results; choose a fresh package path: {output_root}")
     output_root.mkdir(parents=True, exist_ok=True)
@@ -380,7 +411,15 @@ def build(source_root: Path, output_root: Path, seed: str) -> dict[str, object]:
 
     for key in sorted(records_by_component):
         target_split = assignment[key]
-        selected, removed = choose_records(records_by_component[key], target_split)
+        selected, removed = choose_records(records_by_component[key], target_split, train_policy)
+        if target_split == "train" and not keep_train_negatives:
+            kept = []
+            for record in selected:
+                if record.label_text:
+                    kept.append(record)
+                else:
+                    removed.append((record, "excluded_empty_label_for_train_ablation"))
+            selected = kept
         for record, reason in removed:
             removed_rows.append(
                 {
@@ -446,11 +485,11 @@ names: ['cigarette', 'flame', 'smoke']
     (output_root / "dataset" / "data.yaml").write_text(data_yaml, encoding="utf-8")
 
     with (audit_dir / "selected_manifest.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(selected_rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(selected_rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(selected_rows)
     with (audit_dir / "removed_manifest.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(removed_rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(removed_rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(removed_rows)
 
@@ -462,7 +501,9 @@ names: ['cigarette', 'flame', 'smoke']
             "split_unit": "connected component of pre-Roboflow source name and perceptual hash distance <= 4",
             "ratios_by_source": {"train": 0.8, "valid": 0.1, "test": 0.1},
             "stratification": "set of class IDs present; empty labels form a negative-image stratum",
-            "all_split_policy": "keep one deterministic, best-annotated representative per perceptual component",
+            "train_policy": train_policy,
+            "keep_train_negatives": keep_train_negatives,
+            "validation_test_policy": "keep one deterministic, best-annotated representative per perceptual component",
             "exact_duplicate_policy": "remove repeated SHA-256 images; record label conflicts in the removal manifest",
         },
         "input": input_profile,
@@ -484,8 +525,25 @@ def main() -> None:
     parser.add_argument("source", type=Path, help="Original YOLO dataset root")
     parser.add_argument("output", type=Path, help="New output package root (must not exist)")
     parser.add_argument("--seed", default="uris-yolo5-clean-v1")
+    parser.add_argument(
+        "--train-policy",
+        choices=("one", "all"),
+        default="one",
+        help="Keep one representative or all distinct variants inside assigned training groups",
+    )
+    parser.add_argument(
+        "--drop-train-negatives",
+        action="store_true",
+        help="Exclude empty-label images from training while retaining fixed validation/test negatives",
+    )
     args = parser.parse_args()
-    summary = build(args.source.resolve(), args.output.resolve(), args.seed)
+    summary = build(
+        args.source.resolve(),
+        args.output.resolve(),
+        args.seed,
+        train_policy=args.train_policy,
+        keep_train_negatives=not args.drop_train_negatives,
+    )
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 
 

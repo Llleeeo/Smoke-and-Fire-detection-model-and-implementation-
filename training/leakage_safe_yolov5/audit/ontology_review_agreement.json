@@ -1,0 +1,25 @@
+{
+  "master_rows": 498,
+  "reviewer1_rows": 498,
+  "reviewer2_rows": 100,
+  "reviewer1_name": "yhm",
+  "reviewer2_name": "hzp",
+  "reviewer1_decisions": {
+    "flame": 368,
+    "cigarette": 97,
+    "invalid": 5,
+    "ambiguous": 13,
+    "smoking_action": 15
+  },
+  "reviewer1_missing_required_notes": 5,
+  "reviewer2_missing_required_notes": 0,
+  "agreement_count": 96,
+  "agreement_total": 100,
+  "raw_agreement": 0.96,
+  "chance_agreement": 0.5871,
+  "cohen_kappa": 0.9031242431581495,
+  "disagreement_count": 4,
+  "adjudication_queue_count": 21,
+  "reviewer1_elapsed_seconds": 775.124,
+  "reviewer2_elapsed_seconds": 104.925
+}

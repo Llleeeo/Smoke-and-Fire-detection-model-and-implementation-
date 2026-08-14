@@ -15,11 +15,22 @@ GitHub 版本不会提交数据集图片/标签、虚拟环境和临时训练输
 
 在工作站清理后，原始 `yolo 5` 数据、同伴提供的完整 `finetune_D3_stageD92iteration` 文件夹，以及这里生成的 1,887 对清洗数据，均可从私人仓库 `Llleeeo/Smoke-and-Fire-detection-data-private` 恢复。该仓库的 `RESTORE.md` 记录了目标路径，SHA-256 清单用于确认恢复内容与实验时完全一致。
 
+在新 GPU 电脑上克隆公共仓库和上述私人数据仓库、建立环境后，运行：
+
+```bash
+cd training/leakage_safe_yolov5
+./restore_factorial_data.sh /path/to/Smoke-and-Fire-detection-data-private
+```
+
+该命令会先验证私人仓库中的原始数据和 clean split，再依次重建 audited、detection-only 和三个 seed 的 C/D 数据，并生成机器本地的四格实验 YAML。详细说明见 [`experiments/factorial/RECOVER_ON_NEW_MACHINE.md`](experiments/factorial/RECOVER_ON_NEW_MACHINE.md)。
+
+目标 GPU 电脑是 Windows 时，优先使用 PowerShell 版本 `setup_environment.ps1`、`restore_factorial_data.ps1` 和 `experiments/factorial/run_yolov5.ps1`，完整命令见 [`experiments/factorial/RECOVER_ON_WINDOWS_GPU.md`](experiments/factorial/RECOVER_ON_WINDOWS_GPU.md)。
+
 ## 重要说明
 
-旧的 `best.pt` 可以继续用于试跑推理，但不能代表清洗后数据上的最终模型。要得到可信指标，必须使用 `dataset/data.yaml` 重新训练，并在新的 `test` 分组上评估。
+旧的 `best.pt` 可以继续用于试跑推理，但不能代表最终模型。2026-08-14 的标注审计进一步发现：历史 class 1 同时包含真实火焰框和 face/cigarette-smoking 区域，单纯在 `data.yaml` 中改名为 `flame` 并没有完成语义修正。因此，现有 45-epoch 结果只作为 split-clean 的开发记录；形成论文指标前必须先审核 498 个 class-1 标注，再从语义中立的通用预训练权重重新训练。
 
-最新完整实验已经完成：独立测试集上的 Precision 为 **0.841**、Recall 为 **0.680**、mAP@0.5 为 **0.755**、mAP@0.5:0.95 为 **0.453**。完整配置、分类指标、资源占用和产物索引见 [`EXPERIMENT_RESULTS.md`](EXPERIMENT_RESULTS.md)。
+现有完整开发实验已经完成：测试集上的 Precision 为 **0.841**、Recall 为 **0.680**、mAP@0.5 为 **0.755**、mAP@0.5:0.95 为 **0.453**。这些数值记录 mixed-ontology 数据上的行为，不应作为最终三分类论文证据。完整配置、分类指标、资源占用和产物索引见 [`EXPERIMENT_RESULTS.md`](EXPERIMENT_RESULTS.md)。
 
 ## 验证
 

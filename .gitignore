@@ -2,6 +2,7 @@
 **/.DS_Store
 **/__pycache__/
 *.py[cod]
+tmp/
 .env
 .env.*
 !.env.example
@@ -21,11 +22,21 @@ training/leakage_safe_yolov5/runs/*
 
 # YOLOv5 is downloaded at the pinned commit by setup_environment.sh
 training/leakage_safe_yolov5/yolov5/
+training/leakage_safe_yolov5/yolov5s.pt
+training/leakage_safe_yolov5/yolo26n.pt
 
 # Generated dataset files stay local; keep only metadata and instructions
 training/leakage_safe_yolov5/dataset/train/
 training/leakage_safe_yolov5/dataset/valid/
 training/leakage_safe_yolov5/dataset/test/
+training/leakage_safe_yolov5/dataset_audited/
+training/leakage_safe_yolov5/dataset_detect_audited/
+training/leakage_safe_yolov5/dataset_detect_original/
+training/leakage_safe_yolov5/dataset_leaked_audited_seed*/
+training/leakage_safe_yolov5/dataset_leaked_original_seed*/
+
+# Machine-local YAML/status files contain absolute paths and are regenerated.
+training/leakage_safe_yolov5/experiments/factorial/generated/
 
 # The same legacy checkpoint already exists under models/legacy/
 training/leakage_safe_yolov5/original_model_reference/weights/

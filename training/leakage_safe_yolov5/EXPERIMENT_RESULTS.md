@@ -2,7 +2,9 @@
 
 Experiment date: 2026-08-11
 
-This is the first complete local retraining run after repairing cross-split leakage and correcting the clean dataset class definition to `cigarette`, `flame`, and `smoke`.
+This is the first complete local retraining run after repairing cross-split leakage and configuring the dataset YAML as `cigarette`, `flame`, and `smoke`.
+
+> **Post-experiment ontology caution (2026-08-14):** annotation-level review found that historical class 1 contains both visible flames and face/cigarette-smoking regions. Changing the YAML name to `flame` did not by itself correct those mixed semantics. The results below remain valid records of this development run, but the class-1 and aggregate metrics must not be used as final three-class paper evidence until the 498 affected annotations are adjudicated and the model is retrained from semantically neutral pretrained weights.
 
 ## Dataset and configuration
 

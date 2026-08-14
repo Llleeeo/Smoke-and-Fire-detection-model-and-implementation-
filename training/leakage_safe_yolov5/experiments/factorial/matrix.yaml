@@ -1,0 +1,26 @@
+version: 1
+common_evaluation:
+  val_images: dataset_detect_audited/valid/images
+  test_images: dataset_detect_audited/test/images
+  ontology: adjudicated_three_class
+cells:
+  A:
+    name: clean_original
+    leakage: clean
+    training_ontology: original_mixed
+    train_images: dataset_detect_original/train/images
+  B:
+    name: clean_audited
+    leakage: clean
+    training_ontology: audited
+    train_images: dataset_detect_audited/train/images
+  C:
+    name: leaked_original
+    leakage: controlled
+    training_ontology: original_mixed
+    train_images_template: dataset_leaked_original_seed{seed}/train/images
+  D:
+    name: leaked_audited
+    leakage: controlled
+    training_ontology: audited
+    train_images_template: dataset_leaked_audited_seed{seed}/train/images

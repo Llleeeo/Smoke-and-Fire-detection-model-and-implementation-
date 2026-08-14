@@ -1,0 +1,14 @@
+{
+  "status": "verified",
+  "seed": 1,
+  "dose": "100% of strictly eligible test components",
+  "eligible_test_components": 41,
+  "all_test_components": 188,
+  "injected_images": 41,
+  "replacement_images_removed": 41,
+  "training_images": 1511,
+  "exact_test_hashes_in_train": 0,
+  "image_pool_identical_between_C_and_D": true,
+  "selection_unit": "same original source, same label sequence, distinct image hash",
+  "replacement_stratum": "paired original/audited class signature"
+}

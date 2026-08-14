@@ -27,9 +27,9 @@ Generated dataset images/labels, downloaded YOLOv5 source, virtual environments,
 
 The exact raw teammate handoff and the generated leakage-safe dataset are backed up separately in the private repository `Llleeeo/Smoke-and-Fire-detection-data-private`. That repository contains restore instructions and SHA-256 manifests. Access requires permission from the owner; no credentials are stored in either repository.
 
-## Latest clean-split experiment
+## Latest split-clean experiment (development evidence)
 
-The latest model was trained for 45 epochs at 640 px on the leakage-safe split and evaluated once on the independent 188-image test set.
+The latest model was trained for 45 epochs at 640 px on the leakage-safe split and evaluated once on the 188-image test set. A later annotation audit found that historical class 1 contains both flame and face/cigarette-smoking regions. The table therefore documents the completed development experiment, but it is not final three-class paper evidence.
 
 | Model | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
 | --- | ---: | ---: | ---: | ---: |
@@ -47,7 +47,11 @@ The latest model was trained for 45 epochs at 640 px on the leakage-safe split a
 - Perceptual-hash overlap (Hamming distance ≤ 4): 0.
 - Full results: [`training/leakage_safe_yolov5/audit/report.html`](training/leakage_safe_yolov5/audit/report.html).
 
-The checkpoint in `models/legacy/best.pt` was trained on the old split and also uses `face-cigarette-smoking` where the clean dataset uses `flame`. It is the checkpoint actually used to initialise and benchmark the published 45-epoch run. The later teammate handoff folder `finetune_D3_stageD92iteration` contains a different historical checkpoint and is preserved verbatim in the private data repository. Neither legacy checkpoint supersedes the validated retrained model above.
+The checkpoint in `models/legacy/best.pt` was trained on the old split and names class 1 `face-cigarette-smoking`; the clean YAML renamed this class to `flame`, but renaming did not adjudicate mixed annotation semantics. It is the checkpoint actually used to initialise and benchmark the published 45-epoch development run. The later teammate handoff folder `finetune_D3_stageD92iteration` contains a different historical checkpoint and is preserved verbatim in the private data repository. Neither legacy checkpoint should be treated as a final three-class paper model.
+
+## Paper extension
+
+The next research phase treats the current metrics as development evidence and tests how leakage and the mixed historical class ontology affect the conclusion. The 498-row ontology audit is complete, and the four-cell controlled factorial datasets are reproducibly specified for seeds 0, 1, and 2. The preregistered design, paper outline, experiment log, and deadline-based venue plan are under [`research/`](research/); the executable matrix is under [`training/leakage_safe_yolov5/experiments/factorial/`](training/leakage_safe_yolov5/experiments/factorial/). The external holdout remains a blocker for final paper claims.
 
 ## Security note
 
