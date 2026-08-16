@@ -20,7 +20,7 @@ The signed-in GitHub account must be authorised for the private data repository.
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 Set-Location .\training\leakage_safe_yolov5
-.\setup_environment.ps1
+.\setup_environment.ps1 -PythonVersion 3.11
 ```
 
 The script creates `.venv`, downloads YOLOv5, checks out commit `3fb11111c6a8088fbc91430a1f99d207c16f0620`, installs dependencies, and prints the PyTorch CUDA status.

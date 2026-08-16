@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$PythonLauncher = "py"
+    [string]$PythonLauncher = "py",
+    [string]$PythonVersion = "3.11"
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,7 +29,7 @@ if (Test-Path -LiteralPath $VenvDir) {
 }
 
 if ($PythonLauncher -eq "py") {
-    & py -3 -m venv $VenvDir
+    & py "-$PythonVersion" -m venv $VenvDir
 }
 else {
     & $PythonLauncher -m venv $VenvDir
