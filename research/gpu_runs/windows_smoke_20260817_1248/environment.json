@@ -1,0 +1,23 @@
+{
+  "platform": "Windows 10 Home 64-bit",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_vram_gb": 8,
+  "driver": "560.94",
+  "cuda_runtime": "12.6",
+  "python": "3.11.9 64-bit",
+  "torch": "2.12.0+cu126",
+  "torchvision": "0.27.0+cu126",
+  "torch_cuda_available": true,
+  "public_code_commit": "3a6cb73b6eece64813f733d1c775701cb4862644",
+  "private_data_commit": "ebfdcc859e994181fe0758074e1307ed8dea0f5e",
+  "yolov5_commit": "3fb11111c6a8088fbc91430a1f99d207c16f0620",
+  "architecture": "YOLOv5s",
+  "seed": 0,
+  "epochs": 5,
+  "image_size": 640,
+  "batch_size": 8,
+  "workers": 4,
+  "device": "0",
+  "approx_peak_vram_gb": 2.1,
+  "notes": "Sanitized smoke-test environment summary; no usernames, tokens, serials, or absolute home paths."
+}
