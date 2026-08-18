@@ -1,0 +1,6 @@
+dataset_id,source,role,classes,train_images,validation_images,test_images,instances,license_publication,overlap_status,status
+formal_original,private repo commit ebfdcc859e994181fe0758074e1307ed8dea0f5e,train/validation/internal-test,"cigarette,flame,smoke",1511,188,188,NA,private; data not included,factorial audit complete,used
+formal_audited,derived audited ontology from private repository,train/validation/internal-test,"cigarette,flame,smoke",1511,188,188,internal-test 167,private; data not included,factorial audit complete,used
+d_fire_kaggle_pilot,Kaggle mirror sayedgamal99/smoke-fire-detection-yolo,external exploratory pilot,"fire,smoke",NA,NA,470,678,license unverified; upstream CC0 with rights caveat,exact SHA-256 0; pHash not run,evaluated_exploratory
+taco_cigarette_pilot,TACO commit 29de1a9ba05a647b83a90f18d7772e20bb23d846,external supplementary,cigarette,NA,NA,227,667,CC BY 4.0; image rights retained by owners,exact SHA-256 0; pHash not run,evaluated_supplementary
+cigarette_smoker_manual_pilot,Kaggle vitaminc/cigarette-smoker-detection + manual boxes,external preliminary,cigarette,NA,NA,111,125,page-stated CC BY-NC-SA 4.0; rights risk,exact SHA-256 0; pHash not run,evaluated_preliminary

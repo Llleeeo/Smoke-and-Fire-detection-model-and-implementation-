@@ -1,0 +1,17 @@
+run_id,condition,seed,precision,recall,map50,map5095,fire_or_flame_metric,smoke_metric,notes
+A_clean_original_seed0_45e,A,0,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+A_clean_original_seed1_45e,A,1,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+A_clean_original_seed2_45e,A,2,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+B_clean_audited_seed0_45e,B,0,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+B_clean_audited_seed1_45e,B,1,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+B_clean_audited_seed2_45e,B,2,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+C_leaked_original_seed0_45e,C,0,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+C_leaked_original_seed1_45e,C,1,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+C_leaked_original_seed2_45e,C,2,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+D_leaked_audited_seed0_45e,D,0,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+D_leaked_audited_seed1_45e,D,1,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+D_leaked_audited_seed2_45e,D,2,NA,NA,NA,NA,NA,NA,Evaluation completed; per-run numeric stdout was not persisted. Verified condition aggregate is reported separately.
+A_condition_aggregate,A,aggregate,0.797,0.728,0.77,0.463,NA,NA,"mean across 3 seeds; sample SD P=0.0576, R=0.0219, mAP50=0.0223, mAP50:95=0.0193; 188 images/167 instances per run."
+B_condition_aggregate,B,aggregate,0.8487,0.742,0.807,0.4767,NA,NA,"mean across 3 seeds; sample SD P=0.0245, R=0.0187, mAP50=0.0295, mAP50:95=0.0200; 188 images/167 instances per run."
+C_condition_aggregate,C,aggregate,0.813,0.6957,0.7647,0.4587,NA,NA,"mean across 3 seeds; sample SD P=0.0308, R=0.0049, mAP50=0.0212, mAP50:95=0.0110; 188 images/167 instances per run."
+D_condition_aggregate,D,aggregate,0.7953,0.7597,0.8013,0.4753,NA,NA,"mean across 3 seeds; sample SD P=0.0560, R=0.0185, mAP50=0.0274, mAP50:95=0.0203; 188 images/167 instances per run."

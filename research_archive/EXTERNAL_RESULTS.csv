@@ -1,0 +1,7 @@
+dataset,split,run_id,valid_classes,precision,recall,map50,map5095,notes,status
+D-Fire Kaggle pilot,test pilot,A_clean_original_seed0_45e,"fire, smoke",NA,NA,NA,NA,Blocked before inference: 2-class pilot YAML vs 3-class checkpoint. No metrics produced.,blocked
+D-Fire fire-as-flame proxy,test pilot overall,A_clean_original_seed0_45e,"flame proxy, smoke",0.0299,0.1,0.0306,0.0103,"470 images/678 instances. D-Fire fire is used as a proxy label for flame; this is exploratory, not a strict flame benchmark. No cigarette GT.",completed_exploratory
+D-Fire fire-as-flame proxy,test pilot flame-proxy,A_clean_original_seed0_45e,flame proxy,0.0584,0.155,0.0602,0.0203,470 images/414 fire instances. Exploratory proxy only.,completed_exploratory
+D-Fire fire-as-flame proxy,test pilot smoke,A_clean_original_seed0_45e,smoke,0.00139,0.0455,0.000919,0.000382,470 images/264 smoke instances. Cigarette absent.,completed_exploratory
+TACO cigarette pilot,cigarette-only pilot,A_clean_original_seed0_45e,cigarette,0.185,0.0015,0.00275,0.00144,227 images/667 cigarette instances; no flame or smoke GT; supplementary only.,completed_supplementary
+Kaggle cigarette smoker manual pilot,manual preliminary pilot,A_clean_original_seed0_45e,cigarette,0.0106,0.008,0.000414,0.000166,"111 usable images/125 instances; preliminary manual labels, not a benchmark.",completed_preliminary
