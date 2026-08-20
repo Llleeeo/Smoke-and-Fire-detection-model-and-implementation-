@@ -49,13 +49,13 @@ done
 
 Every cell in `experiments/factorial/generated/MATRIX_STATUS_seed{0,1,2}.json` must report `ready`, with 1,511 training images and the common 188/188 audited validation/test sets.
 
-## 5. Training handoff
+## 5. Reproduce the formal matrix
 
-Do not begin confirmatory training immediately. First run the four YOLOv5s seed-0 five-epoch smoke tests documented in `README.md`, inspect the outputs, and then freeze the final training protocol. The external holdout remains separate and must not be used for hyperparameter selection.
+Run a short pipeline check first, then reproduce cells A-D for seeds 0-2 using 45 epochs, 640 px images, batch size 8, SGD, and the pinned hyperparameters. The exact runner command is documented in `README.md`; compare the resulting checkpoints and aggregate metrics with `research/final_report_evidence/`.
 
 ## Preserved evidence
 
-- Frozen protocol and research log: repository `research/` directory.
+- Research log and verified result archive: repository `research/` directory.
 - Final ontology decisions and agreement reports: `audit/` directory.
 - Factorial specification and runners: this directory.
 - Exact controlled-leakage choices: `manifests/` directory.

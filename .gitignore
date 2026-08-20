@@ -9,16 +9,9 @@ tmp/
 
 # Local Python/runtime artifacts
 training/leakage_safe_yolov5/.venv/
-# Keep ad-hoc local runs out of Git, but publish the reviewed full experiment.
+# Training outputs and restored checkpoints remain local. Verified tables and
+# checkpoint hashes are published under research/final_report_evidence/.
 training/leakage_safe_yolov5/runs/*
-!training/leakage_safe_yolov5/runs/baseline_clean_test/
-!training/leakage_safe_yolov5/runs/baseline_clean_test/**
-!training/leakage_safe_yolov5/runs/full_clean_45e/
-!training/leakage_safe_yolov5/runs/full_clean_45e/**
-!training/leakage_safe_yolov5/runs/full_clean_test/
-!training/leakage_safe_yolov5/runs/full_clean_test/**
-!training/leakage_safe_yolov5/runs/full_clean_inference/
-!training/leakage_safe_yolov5/runs/full_clean_inference/**
 
 # YOLOv5 is downloaded at the pinned commit by setup_environment.sh
 training/leakage_safe_yolov5/yolov5/
@@ -37,6 +30,3 @@ training/leakage_safe_yolov5/dataset_leaked_original_seed*/
 
 # Machine-local YAML/status files contain absolute paths and are regenerated.
 training/leakage_safe_yolov5/experiments/factorial/generated/
-
-# The same legacy checkpoint already exists under models/legacy/
-training/leakage_safe_yolov5/original_model_reference/weights/

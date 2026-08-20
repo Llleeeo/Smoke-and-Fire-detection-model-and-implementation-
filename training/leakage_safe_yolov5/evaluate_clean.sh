@@ -9,7 +9,11 @@ elif [[ -x "$package_dir/.venv/bin/python" ]]; then
 else
   python_bin="python3"
 fi
-weights="${WEIGHTS:-$package_dir/../../models/legacy/best.pt}"
+if [[ -z "${WEIGHTS:-}" ]]; then
+  echo "Set WEIGHTS to a restored formal checkpoint before evaluation." >&2
+  exit 2
+fi
+weights="$WEIGHTS"
 
 "$python_bin" "$package_dir/yolov5/val.py" \
   --weights "$weights" \

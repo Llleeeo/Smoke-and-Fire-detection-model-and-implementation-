@@ -13,11 +13,11 @@
 - Split counts: 399 train / 49 validation / 50 test annotations.
 - Geometry: 489 boxes / 9 polygons represented by their bounding rectangle in the review HTML.
 - Manual inspection confirmed that historical class 1 contains both visible flames and smoking/face-cigarette regions. The existing `flame` rename is therefore not an annotation-level correction.
-- Review artifacts: `training/leakage_safe_yolov5/audit/ontology_review.csv` and `ontology_review.html`.
+- Final review artifacts: `training/leakage_safe_yolov5/audit/ontology_review_final.csv` and `ontology_canonical_labels.csv`.
 
 ## 2026-08-14 - one-epoch pipeline smoke test
 
-- Purpose: execution validation only; prohibited from paper evidence.
+- Purpose: execution validation only; excluded from final performance evidence.
 - Initialisation: generic `yolov5s.pt`, not the semantically mixed legacy checkpoint.
 - Configuration: 1 epoch, 640 px, batch 8, MPS, workers 2, seed 0.
 - Completed successfully in about 0.036 hours of reported epoch time.
@@ -53,3 +53,12 @@
 - C/D image identities are identical within each seed, training size remains 1,511, and no exact test-representative hash enters training.
 - Pinned YOLOv5 and Ultralytics 8.4.120 loaded the seed-0 C/D datasets with 0 corrupt samples. Runner dry-runs passed for both architectures.
 - These are construction and loading checks, not model results.
+
+## 2026-08-18 - formal factorial training and internal evaluation complete
+
+- Completed A/B/C/D for seeds 0, 1, and 2 at 45 epochs: 12/12 formal YOLOv5s runs.
+- Evaluated every selected `best.pt` on the common audited internal test: 12/12 evaluations complete.
+- Internal test size: 188 images / 167 instances per run.
+- Internal mAP@0.5:0.95 means ranged from 0.4587 to 0.4767 across conditions.
+- Audited-label conditions B and D produced the strongest internal mAP@0.5:0.95 means.
+- Canonical tables and figures are under `research/final_report_evidence/`.

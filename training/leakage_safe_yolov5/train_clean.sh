@@ -9,18 +9,12 @@ elif [[ -x "$package_dir/.venv/bin/python" ]]; then
 else
   python_bin="python3"
 fi
-default_weights="$package_dir/../../models/legacy/best.pt"
-
-if [[ -f "$default_weights" ]]; then
-  weights="${INITIAL_WEIGHTS:-$default_weights}"
-else
-  weights="${INITIAL_WEIGHTS:-yolov5s.pt}"
-fi
+weights="${INITIAL_WEIGHTS:-yolov5s.pt}"
 
 "$python_bin" "$package_dir/yolov5/train.py" \
   --weights "$weights" \
   --data "$package_dir/dataset/data.yaml" \
-  --hyp "$package_dir/original_model_reference/hyp.yaml" \
+  --hyp "$package_dir/config/yolov5_hyp.yaml" \
   --img 640 \
   --batch 16 \
   --epochs 45 \

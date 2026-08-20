@@ -39,7 +39,7 @@ command=(
   "$python_bin" "$package_dir/yolov5/train.py"
   --weights "$package_dir/yolov5s.pt"
   --data "$data_yaml"
-  --hyp "$package_dir/original_model_reference/hyp.yaml"
+  --hyp "$package_dir/config/yolov5_hyp.yaml"
   --img 640
   --batch-size "${BATCH_SIZE:-16}"
   --epochs "$epochs"

@@ -45,7 +45,7 @@ $Arguments = @(
     (Join-Path $PackageDir "yolov5\train.py"),
     "--weights", (Join-Path $PackageDir "yolov5s.pt"),
     "--data", $DataYaml,
-    "--hyp", (Join-Path $PackageDir "original_model_reference\hyp.yaml"),
+    "--hyp", (Join-Path $PackageDir "config\yolov5_hyp.yaml"),
     "--img", "640",
     "--batch-size", "$BatchSize",
     "--epochs", "$Epochs",

@@ -1,0 +1,3 @@
+dataset_id,source,role,classes,train_images,validation_images,test_images,instances,license_publication,overlap_status,status
+formal_original,private repo commit ebfdcc859e994181fe0758074e1307ed8dea0f5e,train/validation/internal-test,"cigarette,flame,smoke",1511,188,188,NA,private; data not included,factorial audit complete,used
+formal_audited,derived audited ontology from private repository,train/validation/internal-test,"cigarette,flame,smoke",1511,188,188,internal-test 167,private; data not included,factorial audit complete,used
