@@ -1,6 +1,6 @@
-# Direct execution task for the Windows GPU Codex
+# Windows GPU reproduction handoff
 
-You are Codex running on the target Windows computer with an NVIDIA GPU. Treat this file as the complete task specification. Execute it directly and communicate results to the person using this Windows computer. Do not ask them to relay technical questions to another Codex or to reconstruct missing instructions from chat history.
+This document is the complete execution specification for the target Windows computer with an NVIDIA GPU. Follow it directly and record the requested results without relying on missing instructions from another environment.
 
 ## Objective
 
@@ -140,7 +140,7 @@ Update the private repository's clean `main` without force or reset, then verify
 
 Read these files completely:
 
-- `code\WINDOWS_GPU_CODEX_HANDOFF.md`
+- `code\WINDOWS_GPU_REPRODUCTION_HANDOFF.md`
 - `code\research\EXPERIMENT_PROTOCOL.md`
 - `code\research\EXPERIMENT_LOG.md`
 - `code\training\leakage_safe_yolov5\experiments\factorial\RECOVER_ON_WINDOWS_GPU.md`
@@ -328,4 +328,4 @@ Your final response to the person at the Windows computer must be self-contained
 8. Local output paths and the draft PR/report URL, if published.
 9. One next recommendation: either fix the named blocker or approve a separately specified 25-epoch screening stage.
 
-Do not tell the person to “ask the other Codex.” You own this Windows execution task through the mandatory stop point.
+Keep responsibility for the Windows execution workflow through the mandatory stop point and record any unresolved blocker clearly.

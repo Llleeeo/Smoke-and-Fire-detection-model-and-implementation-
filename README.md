@@ -53,7 +53,7 @@ The checkpoint in `models/legacy/best.pt` was trained on the old split and names
 
 The next research phase treats the current metrics as development evidence and tests how leakage and the mixed historical class ontology affect the conclusion. The 498-row ontology audit is complete, and the four-cell controlled factorial datasets are reproducibly specified for seeds 0, 1, and 2. The preregistered design, paper outline, experiment log, and deadline-based venue plan are under [`research/`](research/); the executable matrix is under [`training/leakage_safe_yolov5/experiments/factorial/`](training/leakage_safe_yolov5/experiments/factorial/). The external holdout remains a blocker for final paper claims.
 
-For a direct Codex-to-Codex handoff on the intended Windows/NVIDIA machine, provide [`WINDOWS_GPU_CODEX_HANDOFF.md`](WINDOWS_GPU_CODEX_HANDOFF.md) as the complete task. It includes repository recovery, CUDA checks, data verification, smoke-test gates, reporting, and GitHub result preservation without requiring a separate technical explanation.
+For execution on the intended Windows/NVIDIA machine, use [`WINDOWS_GPU_REPRODUCTION_HANDOFF.md`](WINDOWS_GPU_REPRODUCTION_HANDOFF.md). It covers repository recovery, CUDA checks, data verification, smoke-test gates, reporting, and GitHub result preservation.
 
 ## Security note
 

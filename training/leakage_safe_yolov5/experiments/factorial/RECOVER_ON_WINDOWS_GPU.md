@@ -31,7 +31,7 @@ Before continuing, this command must print `True` and identify the NVIDIA GPU:
 .\.venv\Scripts\python.exe -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NO CUDA')"
 ```
 
-If it prints `False`, stop. Have Codex inspect the installed NVIDIA driver and install the appropriate CUDA-enabled PyTorch build from the official PyTorch instructions before training.
+If it prints `False`, stop and resolve the NVIDIA driver or CUDA-enabled PyTorch installation using the official PyTorch instructions before training.
 
 ## 3. Restore and verify all datasets
 
